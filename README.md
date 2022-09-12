@@ -20,6 +20,7 @@
 - [Sponsors](#sponsors)
 - [License](#license)
 
+
 ## Introduction
 
 [Docker Compose] project for creating and managing an Islandora 8 instance
@@ -449,3 +450,10 @@ This project has been sponsored by:
 [Docker]: https://docs.docker.com
 [MariaDB]: https://mariadb.org/
 [MySQL]: https://www.mysql.com/
+
+## Local Changes
+
+We've added a custom.Makefile to make downloading the codebase directory easier.
+E.g. `make clone-codebase` will grab the default branch of our islandora-repo repository.
+Adding a BRANCH parameter will also checkout the specified branch.
+E.g. `make clone-codebase BRANCH=my-feature-branch`.
