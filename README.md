@@ -453,7 +453,16 @@ This project has been sponsored by:
 
 ## Local Changes
 
-We've added a custom.Makefile to make downloading the codebase directory easier.
-E.g. `make clone-codebase` will grab the default branch of our islandora-repo repository.
-Adding a BRANCH parameter will also checkout the specified branch.
-E.g. `make clone-codebase BRANCH=my-feature-branch`.
+We've added a custom.Makefile for local tasks:
+
+### dev
+
+`make dev` first runs clone-codebase and then, similar to `make local` spins up a local ISLE instance
+of our repository with a number of special case actions to make it work.
+
+### clone-codebase
+`make clone-codebase` grabs the default branch of our islandora-repo repository for the codebase directory.
+It also performs git clones of a few modules that aren't sub-projects, in custom, or in packagist.
+
+Adding a CODEBASE_BRANCH parameter will also checkout the specified branch.
+E.g. `make clone-codebase CODEBASE_BRANCH=isle` which downloads the isle, our current WIP, branch.
