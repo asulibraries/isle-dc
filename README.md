@@ -453,14 +453,25 @@ This project has been sponsored by:
 
 ## Local Changes
 
-We've added a custom.Makefile for local tasks:
+### Set-up
 
-### dev
+We build our own images built with the asu branch of our isle-buildkit repo. Follow the isle-buildkit
+installation instructions and then clone our asu branch before building the images:
+```
+git clone -b asu git@github.com:asulibraries/isle-buildkit.git
+cd isle-buildkit
+./gradlew build
+```
+_Note: the demo build will fail; that is okay._
+
+### custom.Makefile
+
+#### dev
 
 `make dev` first runs clone-codebase and then, similar to `make local` spins up a local ISLE instance
 of our repository with a number of special case actions to make it work.
 
-### clone-codebase
+#### clone-codebase
 `make clone-codebase` grabs the default branch of our islandora-repo repository for the codebase directory.
 It also performs git clones of a few modules that aren't sub-projects, in custom, or in packagist.
 
