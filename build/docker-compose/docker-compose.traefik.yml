@@ -62,6 +62,8 @@ services:
       default:
         aliases:
           - ${KEEP_DOMAIN}
+          - ${PRISM_DOMAIN}
+          - ${REPO_DOMAIN}
       gateway: {}
     deploy:
       resources:

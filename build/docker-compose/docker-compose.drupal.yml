@@ -17,6 +17,14 @@ services:
       DRUPAL_DEFAULT_MATOMO_URL: https://${KEEP_DOMAIN}/matomo/
       DRUPAL_DEFAULT_SITE_URL: http://${KEEP_DOMAIN} # Make sure this is just http and not https!
       DRUPAL_DEFAULT_PROFILE: ${DRUPAL_INSTALL_PROFILE}
+      DRUPAL_DEFAULT_SOLR_CORE: ${DRUPAL_DEFAULT_SOLR_CORE}
+      DRUPAL_SITES: ${DRUPAL_SITES}
+      DRUPAL_SITE_PRISM_CANTALOUPE_URL: https://${PRISM_DOMAIN}/cantaloupe/iiif/2
+      DRUPAL_SITE_PRISM_SITE_URL: http://${PRISM_DOMAIN}
+      DRUPAL_SITE_PRISM_INSTALL: ${DRUPAL_SITE_PRISM_INSTALL}
+      DRUPAL_SITE_PRISM_PROFILE: ${DRUPAL_SITE_PRISM_PROFILE}
+      DRUPAL_SITE_PRISM_CONFIGDIR: ${DRUPAL_SITE_PRISM_CONFIGDIR}
+      DRUPAL_SITE_PRISM_SOLR_CORE: ${DRUPAL_SITE_PRISM_SOLR_CORE}
       PHP_MEMORY_LIMIT: ${PHP_MEMORY_LIMIT}
       PHP_POST_MAX_SIZE: ${PHP_POST_MAX_SIZE}
       PHP_UPLOAD_MAX_FILESIZE: ${PHP_UPLOAD_MAX_FILESIZE}
@@ -28,10 +36,10 @@ services:
       - traefik.http.middlewares.drupal-redirectscheme.redirectscheme.permanent=true
       - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_http.service=${COMPOSE_PROJECT_NAME-isle-dc}-drupal
       - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_http.entrypoints=http
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_http.rule=Host(`${KEEP_DOMAIN}`)
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_http.rule=Host(`${KEEP_DOMAIN}`, `${PRISM_DOMAIN}`)
       - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_http.middlewares=drupal-redirectscheme
       - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_https.entrypoints=https
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_https.rule=Host(`${KEEP_DOMAIN}`)
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_https.rule=Host(`${KEEP_DOMAIN}`, `${PRISM_DOMAIN}`)
       - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_https.tls=true
     networks:
       default:

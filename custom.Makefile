@@ -25,18 +25,13 @@ dev: generate-secrets clone-codebase
 	docker-compose up -d --remove-orphans
 	docker-compose exec -T drupal with-contenv bash -lc 'composer install; chown -R nginx:nginx .'
 	$(MAKE) remove_standard_profile_references_from_config drupal-database8 update-settings-php ENVIROMENT=local
-	docker-compose exec -T drupal with-contenv bash -lc "drush si -y minimal --account-pass $(shell cat secrets/live/DRUPAL_DEFAULT_ACCOUNT_PASSWORD)"
-	docker-compose exec -T drupal with-contenv bash -lc "./vendor/bin/drupal config:import --directory /var/www/drupal/config/sync"
-	docker-compose exec -T drupal with-contenv bash -lc "./vendor/bin/drupal config:import:single --file /var/www/drupal/web/modules/contrib/islandora/modules/islandora_core_feature/config/install/migrate_plus.migration.islandora_tags.yml"
-	docker-compose exec -T drupal with-contenv bash -lc "./vendor/bin/drupal config:import:single --file /var/www/drupal/web/modules/contrib/islandora_defaults/config/install/migrate_plus.migration.islandora_defaults_tags.yml"
+	docker-compose exec -T drupal with-contenv bash -lc "for_all_sites install_site"
 	docker-compose exec -T drupal drush cr -y
 
-	# Disable filelog since we are using the docker logging instead.
-	docker-compose exec -T drupal with-contenv bash -lc "drush pm:un -y filelog"
 	$(MAKE) hydrate-asu ENVIRONMENT=local
-	#-docker-compose exec -T drupal with-contenv bash -lc 'mkdir -p /var/www/drupal/config/sync && chmod -R 775 /var/www/drupal/config/sync'
 	docker-compose exec -T drupal with-contenv bash -lc 'chown -R nginx:nginx /var/www/drupal/web/sites'
-	$(MAKE) login
+	docker-compose exec -T drupal with-contenv bash -lc "drush uli --uri=$(KEEP_DOMAIN)"
+	docker-compose exec -T drupal with-contenv bash -lc "drush uli --uri=$(PRISM_DOMAIN)"
 
 .PHONY: drupal-database8
 ## Creates required databases for drupal site(s) using environment variables.
@@ -48,5 +43,5 @@ drupal-database8:
 .PHONY: hydrate-asu
 .SILENT: hydrate-asu
 ## Reconstitute the site from environment variables.
-hydrate-asu: update-config-from-environment namespaces run-islandora-migrations
+hydrate-asu: update-config-from-environment solr-cores namespaces run-islandora-migrations
 	docker-compose exec -T drupal drush cr -y
