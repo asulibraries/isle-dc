@@ -30,6 +30,8 @@ dev: generate-secrets clone-codebase
 
 	$(MAKE) hydrate-asu ENVIRONMENT=local
 	docker-compose exec -T drupal with-contenv bash -lc 'chown -R nginx:nginx /var/www/drupal/web/sites'
+	docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(KEEP_DOMAIN) mim --userid=1 --all"
+	docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(PRISM_DOMAIN) mim --userid=1 --all"
 	docker-compose exec -T drupal with-contenv bash -lc "drush uli --uri=$(KEEP_DOMAIN)"
 	docker-compose exec -T drupal with-contenv bash -lc "drush uli --uri=$(PRISM_DOMAIN)"
 
