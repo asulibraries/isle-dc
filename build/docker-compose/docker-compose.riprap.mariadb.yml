@@ -1,0 +1,9 @@
+version: "3.7"
+services:
+  riprap:
+    environment:
+      RIPRAP_DB_DRIVER: mysql
+      RIPRAP_DB_PASSWORD: r1pr4p!
+      RIPRAP_DB_USER: riprap
+    depends_on:
+      - mariadb

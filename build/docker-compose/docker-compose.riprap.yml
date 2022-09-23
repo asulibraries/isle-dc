@@ -1,0 +1,15 @@
+version: '3.7'
+networks:
+  default:
+    internal: true
+services:
+  riprap:
+    restart: ${RESTART_POLICY:-unless-stopped}
+    image: ${REPOSITORY:-local}/riprap:${TAG:-latest}
+    environment: 
+      RIPRAP_APP_SECRET: HbxNFSTG3aQQ7nJvLXIscHWDHa9kMJ63
+      RIPRAP_LOG_LEVEL: debug
+    volumes:
+      - riprap-data:/data:rw
+volumes:
+  riprap-data: {}

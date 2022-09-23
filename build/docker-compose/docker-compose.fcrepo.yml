@@ -11,8 +11,10 @@ services:
     restart: ${RESTART_POLICY:-unless-stopped}
     image: ${REPOSITORY:-islandora}/fcrepo:${TAG:-latest}
     environment:
-      FCREPO_ALLOW_EXTERNAL_DRUPALHTTP: http://${KEEP_DOMAIN}/
-      FCREPO_ALLOW_EXTERNAL_DRUPALHTTPS: https://${KEEP_DOMAIN}/
+      FCREPO_ALLOW_EXTERNAL_DRUPALHTTP: http://${DOMAIN}/
+      FCREPO_ALLOW_EXTERNAL_DRUPALHTTPS: https://${DOMAIN}/
+      FCREPO_ALLOW_EXTERNAL_PRISMHTTP: http://${PRISM_DOMAIN}/
+      FCREPO_ALLOW_EXTERNAL_PRISMHTTPS: https://${PRISM_DOMAIN}/
       FCREPO_TOMCAT_ADMIN_ROLES: manager-gui,fedoraAdmin
       FCREPO_TOMCAT_ADMIN_USER: admin
       FCREPO_DISABLE_SYN: ${DISABLE_SYN}
