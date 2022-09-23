@@ -33,7 +33,7 @@ services:
       - --entryPoints.activemq.address=:8161
       - --entryPoints.solr.address=:8983
       - --entryPoints.code-server.address=:8443
-      - --entryPoints.riprap.address=:8001
+      - --entryPoints.riprap.address=:8000
       - --log.level=${TRAEFIK_LOG_LEVEL:-ERROR}
       - --providers.docker
       - --providers.docker.network=gateway
@@ -52,6 +52,7 @@ services:
       - ${ACTIVEMQ_PORT:-8161}:8161   # activemq
       - ${SOLR_PORT:-8983}:8983   # solr
       - ${CODE_SERVER_PORT:-8443}:8443   # code-server
+      - 8000:8000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ../../build/traefik-tls.yml:/etc/traefik/tls.yml
