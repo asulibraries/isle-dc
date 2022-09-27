@@ -33,6 +33,9 @@ dev: generate-secrets clone-codebase
 	# More settings plus content
 	$(MAKE) hydrate-asu ENVIRONMENT=local
 
+	# RipRap needs Admin to be an Administrator
+	docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(DOMAIN) urol administrator admin"
+
 	# Login URLs
 	docker-compose exec -T drupal with-contenv bash -lc "drush uli --uri=$(DOMAIN)"
 	docker-compose exec -T drupal with-contenv bash -lc "drush uli --uri=$(PRISM_DOMAIN)"
