@@ -11,7 +11,12 @@ services:
     restart: ${RESTART_POLICY:-unless-stopped}
     image: ${REPOSITORY:-islandora}/matomo:${TAG:-latest}
     environment:
-      MATOMO_DEFAULT_HOST: ${DOMAIN}
+      MATOMO_FIRST_SITE_URL: ${DOMAIN}
+      MATOMO_FIRST_SITE_NAME: Islandora
+      MATOMO_DB_DRIVER: mysql
+      MATOMO_DB_NAME: matomo
+      MATOMO_DB_USERNAME: matomo
+      MATOMO_DB_HOST: mariadb
     volumes:
       - matomo-config-data:/var/www/matomo
     depends_on:

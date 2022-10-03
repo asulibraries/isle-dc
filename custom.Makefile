@@ -14,7 +14,7 @@ clone-codebase:
 	#([ -d "islandora_repository_reports" ] || (git clone https://github.com/mjordan/islandora_repository_reports.git)) && \
 
 .PHONY: dev
-#.SILENT: dev
+.SILENT: dev
 ## Make a local site with codebase directory bind mounted, modeled after sandbox.islandora.ca
 dev: QUOTED_CURDIR = "$(CURDIR)"
 dev: generate-secrets clone-codebase
