@@ -11,12 +11,18 @@ services:
     restart: ${RESTART_POLICY:-unless-stopped}
     image: ${REPOSITORY:-islandora}/matomo:${TAG:-latest}
     environment:
-      MATOMO_FIRST_SITE_URL: ${DOMAIN}
-      MATOMO_FIRST_SITE_NAME: Islandora
+      MATOMO_DEFAULT_HOST: ${DOMAIN}
+      MATOMO_DEFAULT_NAME: ${MATOMO_DEFAULT_NAME}
       MATOMO_DB_DRIVER: mysql
       MATOMO_DB_NAME: matomo
       MATOMO_DB_USERNAME: matomo
       MATOMO_DB_HOST: mariadb
+      MATOMO_SITES: ${MATOMO_SITES}
+      MATOMO_SITE_PRISM_HOST: ${MATOMO_SITE_PRISM_HOST}
+      MATOMO_SITE_PRISM_NAME: ${MATOMO_SITE_PRISM_NAME}
+      MATOMO_SITE_PRISM_TIMEZONE: ${MATOMO_SITE_PRISM_TIMEZONE}
+      MATOMO_SITE_PRISM_USER_EMAIL: ${MATOMO_SITE_PRISM_USER_EMAIL}
+      MATOMO_SITE_PRISM_USER_NAME: ${MATOMO_SITE_PRISM_USER_NAME}
     volumes:
       - matomo-config-data:/var/www/matomo
     depends_on:
