@@ -50,13 +50,13 @@ drupal-database8:
 .PHONY: hydrate-asu
 .SILENT: hydrate-asu
 ## Reconstitute the site from environment variables.
-hydrate-asu: update-config-from-environment solr-cores namespaces run-islandora-migrations
+hydrate-asu: update-config-from-environment solr-cores namespaces
 	-docker-compose exec -T drupal with-contenv bash -lc "for_all_sites configure_riprap"
 	docker-compose exec -T drupal drush cr -y
 	docker-compose exec -T drupal with-contenv bash -lc 'chown -R nginx:nginx /var/www/drupal/web/sites'
-	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(DOMAIN) mim --userid=1 --all"
 	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(DOMAIN) en -y content_sync"
-	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(DOMAIN) content-sync-import -y --actions=create"
-	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(PRISM_DOMAIN) mim --userid=1 --all"
+	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(DOMAIN) content-sync-import -y --entity-types=block_content,node --actions=create"
+	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(DOMAIN) content-sync-import -y --entity-types=taxonomy_term --actions=delete,create,update"
 	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(PRISM_DOMAIN) en -y content_sync"
-	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(PRISM_DOMAIN) content-sync-import -y --actions=create"
+	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(PRISM_DOMAIN) content-sync-import -y --entity-types=block_content,node --actions=create"
+	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(PRISM_DOMAIN) content-sync-import -y --entity-types=taxonomy_term --actions=delete,create,update"
