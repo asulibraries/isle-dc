@@ -55,3 +55,12 @@ services:
             memory: ${RECAST_MEMORY_LIMIT:-1G}
           reservations:
             memory: 512M
+  awstranscribe:
+    restart: ${RESTART_POLICY:-unless-stopped}
+    image: ${REPOSITORY:-islandora}/aws-transcribe:${TAG:-latest}
+    deploy:
+      resources:
+          limits:
+            memory: ${AWSTRANSCRIBE_MEMORY_LIMIT:-1G}
+          reservations:
+            memory: 512M

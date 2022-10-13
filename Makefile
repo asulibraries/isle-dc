@@ -131,7 +131,7 @@ endif
 ## Creates required databases for drupal site(s) using environment variables.
 .SILENT: drupal-database
 drupal-database:
-	docker-compose exec -T drupal timeout 300 bash -c "while ! test -e /var/run/nginx/nginx.pid -a -e /var/run/php-fpm7/php-fpm7.pid; do sleep 1; done"
+	docker-compose exec -T drupal timeout 300 bash -c "while ! test -e /var/run/nginx/nginx.pid -a -e /var/run/php-fpm8/php-fpm81.pid; do sleep 1; done"
 	docker-compose exec -T drupal with-contenv bash -lc "for_all_sites create_database"
 
 .PHONY: install
