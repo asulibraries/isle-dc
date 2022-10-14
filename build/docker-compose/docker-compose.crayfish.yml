@@ -64,3 +64,6 @@ services:
             memory: ${AWSTRANSCRIBE_MEMORY_LIMIT:-1G}
           reservations:
             memory: 512M
+    networks:
+      default:
+      gateway:
