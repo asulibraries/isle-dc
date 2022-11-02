@@ -30,6 +30,11 @@ services:
       DRUPAL_SITE_PRISM_FCREPO_HOST: ${DRUPAL_SITE_PRISM_FCREPO_HOST}
       DRUPAL_SITE_PRISM_FCREPO_PORT: 8080
       DRUPAL_SITE_PRISM_FCREPO_PATH: ${DRUPAL_SITE_PRISM_FCREPO_PATH}
+      DRUPAL_SITE_REPO_SITE_URL: http://${REPO_DOMAIN}
+      DRUPAL_SITE_REPO_INSTALL: ${DRUPAL_SITE_REPO_INSTALL}
+      DRUPAL_SITE_REPO_PROFILE: ${DRUPAL_SITE_REPO_PROFILE}
+      DRUPAL_SITE_REPO_CONFIGDIR: ${DRUPAL_SITE_REPO_CONFIGDIR}
+      DRUPAL_SITE_REPO_SOLR_CORE: ${DRUPAL_SITE_REPO_SOLR_CORE}
       
       PHP_MEMORY_LIMIT: ${PHP_MEMORY_LIMIT}
       PHP_POST_MAX_SIZE: ${PHP_POST_MAX_SIZE}
@@ -42,10 +47,10 @@ services:
       - traefik.http.middlewares.drupal-redirectscheme.redirectscheme.permanent=true
       - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_http.service=${COMPOSE_PROJECT_NAME-isle-dc}-drupal
       - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_http.entrypoints=http
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_http.rule=Host(`${DOMAIN}`, `${PRISM_DOMAIN}`)
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_http.rule=Host(`${REPO_DOMAIN}`,`${DOMAIN}`, `${PRISM_DOMAIN}`)
       - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_http.middlewares=drupal-redirectscheme
       - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_https.entrypoints=https
-      - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_https.rule=Host(`${DOMAIN}`, `${PRISM_DOMAIN}`)
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_https.rule=Host(`${REPO_DOMAIN}`,`${DOMAIN}`, `${PRISM_DOMAIN}`)
       - traefik.http.routers.${COMPOSE_PROJECT_NAME-isle-dc}-drupal_https.tls=true
     networks:
       default:

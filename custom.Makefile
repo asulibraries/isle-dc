@@ -39,6 +39,7 @@ dev: generate-secrets clone-codebase
 	# Login URLs
 	docker-compose exec -T drupal with-contenv bash -lc "drush uli --uri=$(DOMAIN)"
 	docker-compose exec -T drupal with-contenv bash -lc "drush uli --uri=$(PRISM_DOMAIN)"
+	docker-compose exec -T drupal with-contenv bash -lc "drush uli --uri=$(REPO_DOMAIN)"
 
 .PHONY: drupal-database8
 ## Creates required databases for drupal site(s) using environment variables.
@@ -50,13 +51,31 @@ drupal-database8:
 .PHONY: hydrate-asu
 .SILENT: hydrate-asu
 ## Reconstitute the site from environment variables.
-hydrate-asu: update-config-from-environment solr-cores namespaces run-islandora-migrations
+hydrate-asu: 
+	-docker-compose exec -T drupal with-contenv bash -lc "for_all_sites configure_islandora_module"
+	-docker-compose exec -T drupal with-contenv bash -lc "for_all_sites configure_jwt_module"
+	-docker-compose exec -T drupal with-contenv bash -lc "for_all_sites configure_islandora_default_module"
+	-docker-compose exec -T drupal with-contenv bash -lc "for_all_sites configure_matomo_module"
+	-docker-compose exec -T drupal with-contenv bash -lc "for_all_sites configure_openseadragon"
+	-docker-compose exec -T drupal with-contenv bash -lc "for_all_sites configure_islandora_default_module"
 	-docker-compose exec -T drupal with-contenv bash -lc "for_all_sites configure_riprap"
+	$(MAKE) solr-cores ENVIRONMENT=local
+	$(MAKE) namespaces ENVIRONMENT=local
+	$(MAKE) run-islandora-migrations ENVIRONMENT=local
 	docker-compose exec -T drupal drush cr -y
 	docker-compose exec -T drupal with-contenv bash -lc 'chown -R nginx:nginx /var/www/drupal/web/sites'
+	echo "### KEEP CONTENT SYNC ###"
 	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(DOMAIN) --userid=1 mim -y --all"
 	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(DOMAIN) en -y content_sync"
 	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(DOMAIN) content-sync-import -y --actions=create"
+	echo "### PRISM CONTENT SYNC ###"
 	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(PRISM_DOMAIN) --userid=1 mim -y --all"
 	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(PRISM_DOMAIN) en -y content_sync"
 	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(PRISM_DOMAIN) content-sync-import -y --actions=create"
+	echo "### REPO CONTENT LOAD ###"
+	docker cp ../islandora-landing_20221031.sql $$(docker-compose ps -q drupal):/tmp/dump.sql
+	docker-compose exec -T drupal with-contenv bash -lc 'chown root:root /tmp/dump.sql && mysql -u root -p$${DB_ROOT_PASSWORD} -h $${DRUPAL_DEFAULT_DB_HOST} drupal_repo < /tmp/dump.sql'
+	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(REPO_DOMAIN) pm:uninstall -y cas"
+	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(REPO_DOMAIN) cset -y repo_bento_search.bentosettings this_i8_api_url 'https://$(DOMAIN)/api/search'"
+	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(REPO_DOMAIN) cset -y repo_bento_search.bentosettings second_i8_api_url 'https://$(PRISM_DOMAIN)/api/search'"
+	-docker-compose exec -T drupal with-contenv bash -lc "drush --uri=$(REPO_DOMAIN) cset -y repo_bento_search.bentosettings recent_items_api 'https://$(DOMAIN)/api/recent'"
